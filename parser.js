@@ -17,6 +17,18 @@ function extractLinksFromHtml(htmlString, baseUrl = 'https://example.com') {
   return filteredLinks;
 }
 
+
+function dumpHtmlAndText({html = '<html></html>', text = ''} = {}) {
+  if (html !== '<html></html>') {
+    const $ = cheerio.load(html);
+    const innerHTML = $('#content').html();
+    console.log(innerHTML)
+  }
+  if (text !== '') {
+    console.log(text)
+  }
+}
+
 function transform({html = '<html></html>', text = ''} = {}) {
   if (html) {
     const links = extractLinksFromHtml(html, 'https://links-2.govdelivery.com')
@@ -39,7 +51,7 @@ async function parse(filename) {
         const subject = mail.subject || 'No Subject';
         const html = mail.html ? mail.html : ''
         const text = mail.text ? mail.text : ''
-        transform({html: html, text: text})
+        dumpHtmlAndText({html: html, text: text})
         //console.log('headers:', mail.headers);
       })
       .catch((err) => {
@@ -49,4 +61,4 @@ async function parse(filename) {
   return result
 }
 
-parse('./USDA_SBIR.mbox')
+parse('./public.govdelivery.com.mbox')
